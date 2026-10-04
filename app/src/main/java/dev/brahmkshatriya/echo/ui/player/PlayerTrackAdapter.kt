@@ -66,8 +66,12 @@ class PlayerTrackAdapter(
         private val collapsedPadding = 8.dpToPx(context)
         private val targetZ = collapsedPadding.toFloat()
         private val size = binding.root.resources.getDimension(R.dimen.collapsed_cover_inner).toInt()
+        private val barSize =
+            binding.root.resources.getDimension(R.dimen.collapsed_cover_size).toInt()
         private val coverInset =
             binding.root.resources.getDimension(R.dimen.collapsed_cover_inset).toInt()
+        private val coverCorner =
+            binding.root.resources.getDimension(R.dimen.collapsed_cover_corner).toInt()
         private var targetScale = 0f
         private var targetX = 0
         private var targetY = 0
@@ -80,7 +84,7 @@ class PlayerTrackAdapter(
             val insets = if (!isLandscape) systemInsets.value else getCombined()
             val targetPosX =
                 collapsedPadding + (if (context.isRTL()) insets.end else insets.start) + coverInset
-            val targetPosY = if (playerSheetState.value != STATE_EXPANDED) coverInset
+            val targetPosY = if (playerSheetState.value != STATE_EXPANDED) (barSize - size) / 2
             else collapsedPadding + systemInsets.value.top + coverInset
             targetX = targetPosX - cover.left
             targetY = targetPosY - cover.top
@@ -111,7 +115,7 @@ class PlayerTrackAdapter(
                 translationX = targetX * offset + extraX
                 translationY = targetY * offset + extraY
                 translationZ = targetZ * (1 - offset)
-                currCoverRound = collapsedPadding / scaleX
+                currCoverRound = coverCorner / scaleX
                 invalidateOutline()
             }
         }

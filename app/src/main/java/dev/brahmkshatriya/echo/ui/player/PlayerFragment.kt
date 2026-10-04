@@ -120,16 +120,26 @@ class PlayerFragment : Fragment() {
         resources.getDimension(R.dimen.collapsed_cover_size).toInt()
     }
 
+    private val collapsedCoverSize by lazy {
+        resources.getDimension(R.dimen.collapsed_cover_inner).toInt()
+    }
+
+    // How far the cover sticks out above/below the collapsed bar (cover is larger than the bar).
+    private val coverPoke by lazy {
+        max(0, (collapsedCoverSize - collapseHeight) / 2)
+    }
+
     private fun configureOutline(view: View) {
         val padding = 8.dpToPx(requireContext())
         var currHeight = collapseHeight
+        var currTop = 0
         var currRound = padding.toFloat()
         var currRight = 0
         var currLeft = 0
         view.outlineProvider = object : ViewOutlineProvider() {
             override fun getOutline(view: View, outline: Outline) {
                 outline.setRoundRect(
-                    currLeft, 0, currRight, currHeight, currRound
+                    currLeft, currTop, currRight, currHeight, currRound
                 )
             }
         }
@@ -143,7 +153,8 @@ class PlayerFragment : Fragment() {
             val offset = max(0f, uiViewModel.playerSheetOffset.value)
             val inv = 1 - offset
             view.elevation = maxElevation * inv
-            currHeight = collapseHeight + ((view.height - collapseHeight) * offset).toInt()
+            currHeight = collapseHeight + ((view.height - collapseHeight) * offset).toInt() + (coverPoke * inv).toInt()
+            currTop = (-coverPoke * inv).toInt()
             currLeft = (leftPadding * inv).toInt()
             currRight = view.width - (rightPadding * inv).toInt()
             currRound = max((collapseHeight / 2f) * inv, padding * uiViewModel.playerBackProgress.value * 2)
