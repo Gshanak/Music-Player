@@ -65,7 +65,9 @@ class PlayerTrackAdapter(
 
         private val collapsedPadding = 8.dpToPx(context)
         private val targetZ = collapsedPadding.toFloat()
-        private val size = binding.root.resources.getDimension(R.dimen.collapsed_cover_size).toInt()
+        private val size = binding.root.resources.getDimension(R.dimen.collapsed_cover_inner).toInt()
+        private val coverInset =
+            binding.root.resources.getDimension(R.dimen.collapsed_cover_inset).toInt()
         private var targetScale = 0f
         private var targetX = 0
         private var targetY = 0
@@ -76,9 +78,10 @@ class PlayerTrackAdapter(
         private val isLandscape = context.isLandscape()
         fun updateCollapsed() = uiViewModel.run {
             val insets = if (!isLandscape) systemInsets.value else getCombined()
-            val targetPosX = collapsedPadding + if (context.isRTL()) insets.end else insets.start
-            val targetPosY = if (playerSheetState.value != STATE_EXPANDED) 0
-            else collapsedPadding + systemInsets.value.top
+            val targetPosX =
+                collapsedPadding + (if (context.isRTL()) insets.end else insets.start) + coverInset
+            val targetPosY = if (playerSheetState.value != STATE_EXPANDED) coverInset
+            else collapsedPadding + systemInsets.value.top + coverInset
             targetX = targetPosX - cover.left
             targetY = targetPosY - cover.top
             currentCoverHeight = cover.height.takeIf { it > 0 } ?: currentCoverHeight

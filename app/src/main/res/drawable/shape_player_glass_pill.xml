@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Glass pill for the collapsed mini player.
+    radius = 32dp == half of collapsed_cover_size (64dp), so it renders as a true pill.
+    Fill + hairline stroke are theme aware (see values/ and values-night/colors.xml).
+-->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="32dp" />
+    <solid android:color="@color/player_glass" />
+    <stroke
+        android:width="0.5dp"
+        android:color="@color/player_glass_stroke" />
+</shape>
