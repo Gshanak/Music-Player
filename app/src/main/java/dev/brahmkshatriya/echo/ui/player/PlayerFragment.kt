@@ -98,6 +98,15 @@ class PlayerFragment : Fragment() {
         PlayerTrackAdapter(uiViewModel, viewModel.playerState.current, adapterListener)
     }
 
+    // System-bar visibility is a window-level operation; remember what we last applied
+    // so we don't re-run it on every animation frame (that causes jank on weak devices).
+    private var systemUiHidden: Boolean? = null
+    private fun applySystemUi(hide: Boolean) {
+        if (systemUiHidden == hide) return
+        systemUiHidden = hide
+        requireActivity().hideSystemUi(hide)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?,
     ): View {
@@ -270,10 +279,8 @@ class PlayerFragment : Fragment() {
             adapter.playerOffsetUpdated()
 
             viewModel.browser.value?.volume = 1 + min(0f, it)
-            if (it < 1)
-                requireActivity().hideSystemUi(false)
-            else if (uiViewModel.playerBgVisible.value)
-                requireActivity().hideSystemUi(true)
+            if (it < 1) applySystemUi(false)
+            else if (uiViewModel.playerBgVisible.value) applySystemUi(true)
         }
 
         observe(uiViewModel.playerSheetState) {
@@ -290,7 +297,7 @@ class PlayerFragment : Fragment() {
         observe(uiViewModel.playerBgVisible) {
             binding.fgContainer.animateVisibility(!it)
             binding.playerMoreContainer.animateVisibility(!it)
-            requireActivity().hideSystemUi(it)
+            applySystemUi(it)
         }
         binding.bgPanel.configureClicking(adapterListener, uiViewModel)
         binding.playerCollapsedContainer.playerClose.setOnClickListener {
