@@ -146,7 +146,7 @@ class PlayerFragment : Fragment() {
             currHeight = collapseHeight + ((view.height - collapseHeight) * offset).toInt()
             currLeft = (leftPadding * inv).toInt()
             currRight = view.width - (rightPadding * inv).toInt()
-            currRound = max(padding * inv, padding * uiViewModel.playerBackProgress.value * 2)
+            currRound = max((collapseHeight / 2f) * inv, padding * uiViewModel.playerBackProgress.value * 2)
             view.invalidateOutline()
         }
         observe(uiViewModel.combined) {
@@ -201,7 +201,7 @@ class PlayerFragment : Fragment() {
             }
             binding.bgCollapsed.run {
                 translationY = collapsedY - collapseHeight * collapsedInv * 2
-                alpha = min(1f, collapsedOffset * 2) - 0.5f
+                alpha = min(1f, collapsedOffset * 2)
             }
             val alphaInv = 1 - min(1f, offset * 3)
             binding.expandedToolbar.run {
@@ -523,7 +523,6 @@ class PlayerFragment : Fragment() {
                 root.setBackgroundColor(color)
                 val backgroundState = ColorStateList.valueOf(colors.background)
                 bgGradient.imageTintList = backgroundState
-                bgCollapsed.backgroundTintList = backgroundState
                 bufferView?.indeterminateDrawable?.setTint(colors.accent)
                 expandedToolbar.run {
                     setTitleTextColor(colors.onBackground)

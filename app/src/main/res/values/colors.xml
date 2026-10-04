@@ -9,4 +9,7 @@
     <color name="amoled_bg_semi">#54FFFFFF</color>
     <color name="amoled_fg">@color/black</color>
     <color name="amoled_fg_semi">#14000000</color>
+    <!-- Mini player glass: translucent surface + hairline edge highlight -->
+    <color name="player_glass">#CCFFFFFF</color>
+    <color name="player_glass_stroke">#14000000</color>
 </resources>
